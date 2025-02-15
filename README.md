@@ -100,6 +100,8 @@ This repository demonstrates how to implement JWT-based authentication in Next.j
    npm install
    # or
    yarn install
+   # or
+   pnpm install
    ```
 
 3. **Set Environment Variables:**
@@ -115,6 +117,8 @@ This repository demonstrates how to implement JWT-based authentication in Next.j
    npm run dev
    # or
    yarn dev
+   # or 
+   pnpm dev
    ```
 
 5. **Open in Browser:**
