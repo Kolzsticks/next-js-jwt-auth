@@ -50,22 +50,30 @@ export async function signIn(formData: FormData) {
   }
 }
 
+
+interface UserPayload {
+  email: string;
+  role: string;
+}
+
 /**
  * getSession retrieves and verifies the JWT token from cookies.
  * If valid, returns the decoded payload.
  *
  * @returns {object|null} The decoded payload (user data) or null if verification fails.
  */
-export async function getSession() {
+export async function getSession(): Promise<{ user: UserPayload } | null> {
+  // Retrieve the cookie store and get the 'currentUser' cookie.
   const cookieStore = cookies();
   const token = (await cookieStore).get('currentUser')?.value;
   if (!token) return null;
   try {
-    // Verify the token using jose.
+    // Verify the token using the secret key.
     const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET));
-    return { user: payload };
+    // Convert the payload to the expected UserPayload type.
+    const user = payload as unknown as UserPayload;
+    return { user };
   } catch (error) {
-    // Return null if token verification fails.
     return null;
   }
 }
