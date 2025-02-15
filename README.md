@@ -91,8 +91,8 @@ This repository demonstrates how to implement JWT-based authentication in Next.j
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/yourusername/next-jwt-auth-demo.git
-   cd next-jwt-auth-demo
+   git clone https://github.com/Kolzsticks/next-js-jwt-auth.git
+   cd next-auth-jwt
    ```
 
 2. **Install Dependencies:**
