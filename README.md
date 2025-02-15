@@ -14,8 +14,8 @@ This repository demonstrates how to implement JWT-based authentication in Next.j
   Only authenticated users can access protected pages (e.g., dashboard).
 - **Responsive UI:**  
   Styled with Tailwind CSS for a modern, responsive interface.
-- **Logout Functionality:**  
-  Securely log out users by clearing the JWT token.
+- **Login & Logout Functionality:**  
+  A dedicated LoginButton component for submitting the login form and a secure logout mechanism that clears the JWT token.
 
 ## Project Structure
 
@@ -29,10 +29,11 @@ This repository demonstrates how to implement JWT-based authentication in Next.j
 │   │       └── route.ts       # API route for logout: clears the JWT cookie.
 │   ├── auth.ts                # Authentication helper functions using jose (signIn and getSession).
 │   ├── dashboard
-│   │   ├── LogoutButton.tsx   # Client component for logging out.
 │   │   └── page.tsx           # Protected dashboard page displaying user info and a logout button.
+│   ├── components
+│   │   └── LoginButton.tsx    # Client component for the login button.
 │   ├── lib
-│   │   └── validation.ts      # Zod schema for validating login form data.
+│   │   └── zod.ts             # Zod schema for validating login form data.
 │   └── login
 │       └── page.tsx           # Login page with a form, inline error messages, and Tailwind CSS styling.
 ├── middleware.ts              # (Optional) Middleware to further protect routes.
@@ -48,17 +49,17 @@ This repository demonstrates how to implement JWT-based authentication in Next.j
   - Extracts user credentials from the submitted form data.
   - Verifies credentials against hardcoded demo values (`user@example.com` and `password`).
   - Uses the `jose` library to generate a JWT token that expires in 1 hour.
-  - Stores the token in an HTTP-only cookie named `token`.
+  - Stores the token in an HTTP-only cookie named `currentUser`.
 
 - **getSession Function:**  
-  - Retrieves the JWT token from cookies.
+  - Retrieves the JWT token from cookies using our cookie store method.
   - Verifies and decodes the token using the secret key.
   - Returns the decoded payload (user data) if the token is valid; otherwise, returns `null`.
 
 ### Login API Route (`app/api/login/route.ts`)
 - **Functionality:**  
   - Receives POST requests with login credentials.
-  - Validates input using a Zod schema defined in `app/lib/validation.ts`.
+  - Validates input using a Zod schema defined in `app/lib/zod.ts`.
   - Calls `signIn` to authenticate the user and set the JWT cookie.
   - Returns a JSON response indicating success or detailed error messages.
 
@@ -71,19 +72,20 @@ This repository demonstrates how to implement JWT-based authentication in Next.j
 ### Login Page (`app/login/page.tsx`)
 - **Functionality:**  
   - Renders a Tailwind CSS-styled login form.
-  - Submits form data to the login API and displays inline error messages if needed.
+  - Imports and uses the **LoginButton** component from `app/components/LoginButton.tsx` to handle form submission.
+  - Displays inline error messages if validation fails or credentials are invalid.
   - Redirects the user to the dashboard upon successful login.
+
+### Login Button Component (`app/components/LoginButton.tsx`)
+- **Functionality:**  
+  - A client component that renders the login button.
+  - Handles form submission logic or can be used in conjunction with the login page for a cleaner separation of concerns.
 
 ### Dashboard Page (`app/dashboard/page.tsx`)
 - **Functionality:**  
-  - A protected page that checks for a valid JWT session using `getSession`.
+  - A protected page that uses `getSession` to verify a valid JWT session.
   - Displays a welcome message with the user's email.
-  - Includes a logout button to clear the session.
-
-### Logout Button (`app/dashboard/LogoutButton.tsx`)
-- **Functionality:**  
-  - A client component that sends a POST request to the logout API route to clear the JWT token.
-  - Redirects the user to the login page upon successful logout.
+  - Includes a logout mechanism (for example, via a logout button integrated in the dashboard).
 
 ## Installation
 
@@ -133,7 +135,7 @@ This repository demonstrates how to implement JWT-based authentication in Next.j
   - It is only accessible if a valid JWT session exists.
 
 - **Logout:**
-  - Click the "Log Out" button to clear the JWT token and be redirected back to the login page.
+  - Click the "Log Out" button (integrated into the dashboard or provided separately) to clear the JWT token and be redirected back to the login page.
 
 ## Contributing
 
