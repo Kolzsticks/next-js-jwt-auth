@@ -34,7 +34,7 @@ export async function signIn(formData: FormData) {
     // Set the token in an HTTP-only cookie.
     const cookieStore = cookies();
     (await cookieStore).set({
-      name: 'token',
+      name: 'currentUser',
       value: token,
       path: '/',
       httpOnly: true,
@@ -58,7 +58,7 @@ export async function signIn(formData: FormData) {
  */
 export async function getSession() {
   const cookieStore = cookies();
-  const token = (await cookieStore).get('token')?.value;
+  const token = (await cookieStore).get('currentUser')?.value;
   if (!token) return null;
   try {
     // Verify the token using jose.

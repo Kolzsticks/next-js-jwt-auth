@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [errorMessages, setErrorMessages] = useState<{ [key: string]: string[] }>({});
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMessages({});
+    setLoading(true);
     const formData = new FormData(e.currentTarget);
 
     const res = await fetch("/api/login", {
@@ -22,6 +24,7 @@ export default function LoginPage() {
     if (!res.ok) {
       // Display errors returned from the API
       setErrorMessages(data.error || {});
+      setLoading(false);
     } else {
       // Successful login: redirect to the dashboard
       router.push("/dashboard");
@@ -43,7 +46,7 @@ export default function LoginPage() {
               type="email"
               required
               placeholder="Enter your email"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full px-3 text-gray-900 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
             {errorMessages.email && (
               <p className="mt-1 text-red-500 text-sm">{errorMessages.email.join(", ")}</p>
@@ -59,7 +62,7 @@ export default function LoginPage() {
               type="password"
               required
               placeholder="Enter your password"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full px-3 text-gray-900 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
             {errorMessages.password && (
               <p className="mt-1 text-red-500 text-sm">{errorMessages.password.join(", ")}</p>
